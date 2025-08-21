@@ -290,7 +290,7 @@ export default function WiFiHelpCenter() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <motion.a
-  href="tel:+18188397963"
+  href="tel:+18102583601"
   whileHover={{ scale: 1.05 }}
   whileTap={{ scale: 0.95 }}
   className="bg-black text-white px-8 py-4 rounded-3xl font-semibold text-lg hover:bg-gray-800 transition-all duration-300 shadow-lg inline-block text-center"

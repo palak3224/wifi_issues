@@ -399,7 +399,7 @@ export default function WiFiTroubleshooter() {
                 className="grid md:grid-cols-2 gap-6 mb-8"
               >
                 <motion.a
-  href="tel:+18188397963"
+  href="tel:+18102583601"
   whileHover={{ scale: 1.05, y: -2 }}
   whileTap={{ scale: 0.95 }}
   className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-8 py-6 rounded-2xl font-bold text-xl transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 cursor-pointer"

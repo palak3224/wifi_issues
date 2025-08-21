@@ -286,23 +286,19 @@ export default function WiFiHelpCenter() {
         >
           <h3 className="text-2xl font-bold text-black mb-4">Still Need Help?</h3>
           <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-            If you couldn\'t find a solution to your WiFi problem, our technical support team is here to help you 24/7.
+            If you couldn&apos;t find a solution to your WiFi problem, our technical support team is here to help you 24/7.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-black text-white px-8 py-4 rounded-3xl font-semibold text-lg hover:bg-gray-800 transition-all duration-300 shadow-lg"
-            >
-              Contact Support
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-white text-black px-8 py-4 rounded-3xl font-semibold text-lg border-2 border-black hover:bg-gray-50 transition-all duration-300 shadow-lg"
-            >
-              Live Chat
-            </motion.button>
+            <motion.a
+  href="tel:+18188397963"
+  whileHover={{ scale: 1.05 }}
+  whileTap={{ scale: 0.95 }}
+  className="bg-black text-white px-8 py-4 rounded-3xl font-semibold text-lg hover:bg-gray-800 transition-all duration-300 shadow-lg inline-block text-center"
+>
+  Contact Support
+</motion.a>
+
+            
           </div>
         </motion.div>
         <div className="mt-8 text-center">

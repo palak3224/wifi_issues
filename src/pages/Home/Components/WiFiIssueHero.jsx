@@ -129,6 +129,7 @@ export default function WiFiIssueHero() {
               <motion.button
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" })}
                 className="bg-black text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-800 transition-all duration-300 shadow-lg hover:shadow-xl"
               >
                 Get Help
@@ -138,7 +139,8 @@ export default function WiFiIssueHero() {
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
                 className="bg-white text-black px-8 py-4 rounded-xl font-semibold text-lg border-2 border-black hover:bg-gray-50 transition-all duration-300 shadow-lg hover:shadow-xl"
-              >
+                onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" })}
+             >
                 Connect Now
               </motion.button>
             </motion.div>

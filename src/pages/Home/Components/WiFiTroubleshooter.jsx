@@ -398,17 +398,19 @@ export default function WiFiTroubleshooter() {
                 transition={{ delay: 0.5 }}
                 className="grid md:grid-cols-2 gap-6 mb-8"
               >
-                <motion.button
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-8 py-6 rounded-2xl font-bold text-xl transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-3"
-                >
-                  <Phone className="w-6 h-6" />
-                  <div className="text-left">
-                    <div>Call Now - 24/7</div>
-                    <div className="text-sm font-normal opacity-90">Instant WiFi Support</div>
-                  </div>
-                </motion.button>
+                <motion.a
+  href="tel:+18188397963"
+  whileHover={{ scale: 1.05, y: -2 }}
+  whileTap={{ scale: 0.95 }}
+  className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-8 py-6 rounded-2xl font-bold text-xl transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 cursor-pointer"
+>
+  <Phone className="w-6 h-6" />
+  <div className="text-left">
+    <div>Call Now - 24/7</div>
+    <div className="text-sm font-normal opacity-90">Instant WiFi Support</div>
+  </div>
+</motion.a>
+
 
                
                 

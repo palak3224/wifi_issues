@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronRight, ChevronLeft, MessageCircle, Phone, Mail, CheckCircle, Wifi } from 'lucide-react';
+import { ChevronRight, ChevronLeft, MessageCircle, Phone, Mail, CheckCircle, Wifi, Search } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function WiFiTroubleshooter() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -8,7 +9,9 @@ export default function WiFiTroubleshooter() {
   const [userContact, setUserContact] = useState({ name: '', email: '', phone: '' });
   const [showResults, setShowResults] = useState(false);
 
-  const totalSteps = 5;
+  const totalSteps = 4; // Changed from 5 to 4
+
+  const navigate = useNavigate();
 
   const questions = {
     1: {
@@ -35,6 +38,11 @@ export default function WiFiTroubleshooter() {
           label: 'Xfinity', 
           logo: 'https://images.crunchbase.com/image/upload/c_pad,h_256,w_256,f_auto,q_auto:eco,dpr_1/uuzfrjd9i9udpqjpvung' 
         },
+        { 
+          id: 'spectrum', 
+          label: 'Spectrum', 
+          logo: 'https://corporate.charter.com/static/54614eedf761eb0e66a0a32261f213f6/3a4bc/CEW_About_Community_Solutions_Logo.jpg' 
+        },
         { id: 'other', label: 'Other Provider', logo: 'https://cdn-icons-png.flaticon.com/512/1828/1828833.png' }
       ]
     },
@@ -53,24 +61,11 @@ export default function WiFiTroubleshooter() {
       ]
     },
     3: {
-      title: "When did this problem start?",
-      subtitle: "Help us understand the timeline of your issue",
-      options: [
-        { id: 'just_now', label: 'Just started (within last hour)', icon: '⏰' },
-        { id: 'today', label: 'Started today', icon: '📅' },
-        { id: 'few_days', label: 'Started a few days ago', icon: '📆' },
-        { id: 'week_plus', label: 'Over a week ago', icon: '⏳' },
-        { id: 'after_change', label: 'After equipment/setup change', icon: '🔧' },
-        { id: 'always_issue', label: 'Always been an issue', icon: '😤' },
-        { id: 'other_timeline', label: 'Other timeline', icon: '❓' }
-      ]
-    },
-    4: {
       title: "Let us help you resolve this issue",
       subtitle: "Provide your contact information so our tech support can assist you",
       isForm: true
     },
-    5: {
+    4: {
       title: "We'll get your WiFi working again!",
       subtitle: "Our technical support team will contact you shortly",
       isResult: true
@@ -82,7 +77,7 @@ export default function WiFiTroubleshooter() {
     
     // Auto-advance for single-select questions
     setTimeout(() => {
-      if (currentStep < 4) {
+      if (currentStep < 3) { // Changed from 4 to 3
         setCurrentStep(currentStep + 1);
       }
     }, 500);
@@ -90,7 +85,7 @@ export default function WiFiTroubleshooter() {
 
   const handleContactSubmit = () => {
     if (userContact.name && userContact.email) {
-      setCurrentStep(5);
+      setCurrentStep(4); // Changed from 5 to 4
     }
   };
 
@@ -175,7 +170,7 @@ export default function WiFiTroubleshooter() {
 
         {/* Question Cards */}
         <AnimatePresence mode="wait">
-          {currentStep <= 3 && (
+          {currentStep <= 2 && ( // Changed from 3 to 2
             <motion.div
               key={currentStep}
               variants={questionVariants}
@@ -266,7 +261,7 @@ export default function WiFiTroubleshooter() {
           )}
 
           {/* Contact Form */}
-          {currentStep === 4 && (
+          {currentStep === 3 && ( // Changed from 4 to 3
             <motion.div
               key="contact-form"
               variants={questionVariants}
@@ -277,10 +272,10 @@ export default function WiFiTroubleshooter() {
             >
               <div className="text-center mb-8">
                 <h2 className="text-2xl lg:text-3xl font-bold text-black mb-3">
-                  {questions[4].title}
+                  {questions[3].title}
                 </h2>
                 <p className="text-gray-600 text-lg">
-                  {questions[4].subtitle}
+                  {questions[3].subtitle}
                 </p>
               </div>
 
@@ -333,7 +328,6 @@ export default function WiFiTroubleshooter() {
                   <ul className="text-blue-700 text-sm space-y-1">
                     <li>• Provider: {getSelectedOption(1)?.label || 'Not specified'}</li>
                     <li>• Issue: {getSelectedOption(2)?.label || 'Not specified'}</li>
-                    <li>• Timeline: {getSelectedOption(3)?.label || 'Not specified'}</li>
                   </ul>
                 </div>
 
@@ -361,7 +355,7 @@ export default function WiFiTroubleshooter() {
           )}
 
           {/* Results */}
-          {currentStep === 5 && (
+          {currentStep === 4 && ( // Changed from 5 to 4
             <motion.div
               key="results"
               variants={questionVariants}
@@ -416,17 +410,23 @@ export default function WiFiTroubleshooter() {
                   </div>
                 </motion.button>
 
+               
+                
                 <motion.button
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                   className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-6 rounded-2xl font-bold text-xl transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-3"
                 >
-                  <MessageCircle className="w-6 h-6" />
+                     <a href="https://devicedetect.vercel.app/" target='_blank' className='flex items-center justify-center gap-3'>
+
+                  <Search className="w-6 h-6" />
                   <div className="text-left">
-                    <div>Live Chat - 24/7</div>
-                    <div className="text-sm font-normal opacity-90">Message Our Experts</div>
+                    <div>Scan Now - 24/7</div>
+                    <div className="text-sm font-normal opacity-90">Diagnose Your Network</div>
                   </div>
+                    </a>
                 </motion.button>
+
               </motion.div>
 
               <motion.div

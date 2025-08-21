@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Wifi, Router, Shield, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function WiFiHelpCenter() {
   const [activeSection, setActiveSection] = useState('connection-problems');
@@ -164,8 +165,7 @@ export default function WiFiHelpCenter() {
                     <button
                       key={category.id}
                       onClick={() => scrollToSection(category.id)}
-                      className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-300 ${
-                        activeSection === category.id
+                      className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-300 ${activeSection === category.id
                           ? 'bg-black text-white'
                           : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
                       }`}
@@ -198,8 +198,7 @@ export default function WiFiHelpCenter() {
                           onClick={() => scrollToSection(category.id)}
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
-                          className={`w-full flex items-start gap-4 p-4 rounded-xl transition-all duration-300 text-left ${
-                            activeSection === category.id
+                          className={`w-full flex items-start gap-4 p-4 rounded-xl transition-all duration-300 text-left ${activeSection === category.id
                               ? 'bg-black text-white shadow-lg'
                               : 'bg-gray-50 hover:bg-gray-100 text-gray-700'
                           }`}
@@ -207,9 +206,7 @@ export default function WiFiHelpCenter() {
                           <Icon className="w-6 h-6 flex-shrink-0 mt-0.5" />
                           <div>
                             <h4 className="font-semibold mb-1">{category.title}</h4>
-                            <p className={`text-sm ${
-                              activeSection === category.id ? 'text-gray-200' : 'text-gray-500'
-                            }`}>
+                            <p className={`text-sm ${activeSection === category.id ? 'text-gray-200' : 'text-gray-500'}`}>
                               {category.description}
                             </p>
                           </div>
@@ -289,7 +286,7 @@ export default function WiFiHelpCenter() {
         >
           <h3 className="text-2xl font-bold text-black mb-4">Still Need Help?</h3>
           <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-            If you couldn't find a solution to your WiFi problem, our technical support team is here to help you 24/7.
+            If you couldn\'t find a solution to your WiFi problem, our technical support team is here to help you 24/7.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <motion.button
@@ -308,6 +305,11 @@ export default function WiFiHelpCenter() {
             </motion.button>
           </div>
         </motion.div>
+        <div className="mt-8 text-center">
+          <Link to="/privacy-policy" className="text-gray-600 hover:text-black transition-colors">
+            Privacy Policy
+          </Link>
+        </div>
       </motion.div>
     </div>
   );

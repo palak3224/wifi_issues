@@ -38,24 +38,58 @@ export default function MinimalContactPopup() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
-      console.log('Form submitted:', formData);
-      setIsSubmitted(true);
-      
-      // Auto-close after 2 seconds
-      setTimeout(() => {
-        setIsOpen(false);
-        setTimeout(() => {
-          setIsSubmitted(false);
-          setFormData({ name: '', email: '', phone: '' });
-          setErrors({});
-        }, 300);
-      }, 4000);
+      console.log("📩 Form Submitted:", formData);
+
+      const scriptURL =
+        "https://script.google.com/macros/s/AKfycbx7ewhHUsKBDWoepPeIK9qmRfK2zRerrzBa58eKuqSdm6ofLGylzODFSBki-NO3FKc/exec";
+
+      // Prepare data for x-www-form-urlencoded
+      const formParams = new URLSearchParams();
+      formParams.append("name", formData.name);
+      formParams.append("email", formData.email);
+      formParams.append("phone", formData.phone || "");
+      formParams.append("provider", ""); // empty for now
+      formParams.append("issue", "");    // empty for now
+
+      try {
+        const response = await fetch(scriptURL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: formParams.toString(),
+        });
+
+        console.log("📡 Google Script Response:", response);
+
+        if (response.ok) {
+          console.log("✅ Data saved to Google Sheet");
+          setIsSubmitted(true);
+
+          // Auto-close after 4 seconds
+          setTimeout(() => {
+            setIsOpen(false);
+            setTimeout(() => {
+              setIsSubmitted(false);
+              setFormData({ name: "", email: "", phone: "" });
+              setErrors({});
+            }, 300);
+          }, 4000);
+        } else {
+          console.error("❌ Failed to save data. Status:", response.status);
+          alert("Something went wrong. Please try again.");
+        }
+      } catch (error) {
+        console.error("⚠️ Error submitting to Google Sheets:", error);
+        alert("Network error! Please try again.");
+      }
     }
   };
+
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));

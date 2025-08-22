@@ -18,30 +18,30 @@ export default function WiFiTroubleshooter() {
       title: "Which WiFi/Internet provider are you having issues with?",
       subtitle: "Select your internet service provider",
       options: [
-        { 
-          id: 'verizon', 
-          label: 'Verizon', 
-          logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmDhIN8srPBBhZY6WrlG09NU24jFukmFiMuTlH-S8eiBr-78-x8GOg9phcQzmyW-ypLF4&usqp=CAU' 
+        {
+          id: 'verizon',
+          label: 'Verizon',
+          logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmDhIN8srPBBhZY6WrlG09NU24jFukmFiMuTlH-S8eiBr-78-x8GOg9phcQzmyW-ypLF4&usqp=CAU'
         },
-        { 
-          id: 'att', 
-          label: 'AT&T', 
-          logo: 'https://mma.prnewswire.com/media/355192/at_t_inc__logo.jpg' 
+        {
+          id: 'att',
+          label: 'AT&T',
+          logo: 'https://mma.prnewswire.com/media/355192/at_t_inc__logo.jpg'
         },
-        { 
-          id: 'tmobile', 
-          label: 'T-Mobile', 
-          logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNSoTfWr2vV_9nRdaoWDdHQELSrRod0IDiaw&s' 
+        {
+          id: 'tmobile',
+          label: 'T-Mobile',
+          logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNSoTfWr2vV_9nRdaoWDdHQELSrRod0IDiaw&s'
         },
-        { 
-          id: 'xfinity', 
-          label: 'Xfinity', 
-          logo: 'https://images.crunchbase.com/image/upload/c_pad,h_256,w_256,f_auto,q_auto:eco,dpr_1/uuzfrjd9i9udpqjpvung' 
+        {
+          id: 'xfinity',
+          label: 'Xfinity',
+          logo: 'https://images.crunchbase.com/image/upload/c_pad,h_256,w_256,f_auto,q_auto:eco,dpr_1/uuzfrjd9i9udpqjpvung'
         },
-        { 
-          id: 'spectrum', 
-          label: 'Spectrum', 
-          logo: 'https://corporate.charter.com/static/54614eedf761eb0e66a0a32261f213f6/3a4bc/CEW_About_Community_Solutions_Logo.jpg' 
+        {
+          id: 'spectrum',
+          label: 'Spectrum',
+          logo: 'https://corporate.charter.com/static/54614eedf761eb0e66a0a32261f213f6/3a4bc/CEW_About_Community_Solutions_Logo.jpg'
         },
         { id: 'other', label: 'Other Provider', logo: 'https://cdn-icons-png.flaticon.com/512/1828/1828833.png' }
       ]
@@ -74,7 +74,7 @@ export default function WiFiTroubleshooter() {
 
   const handleAnswer = (questionId, answerId) => {
     setAnswers({ ...answers, [questionId]: answerId });
-    
+
     // Auto-advance for single-select questions
     setTimeout(() => {
       if (currentStep < 3) { // Changed from 4 to 3
@@ -83,11 +83,6 @@ export default function WiFiTroubleshooter() {
     }, 500);
   };
 
-  const handleContactSubmit = () => {
-    if (userContact.name && userContact.email) {
-      setCurrentStep(4); // Changed from 5 to 4
-    }
-  };
 
   const handleNext = () => {
     if (currentStep < totalSteps) {
@@ -104,9 +99,11 @@ export default function WiFiTroubleshooter() {
   const getSelectedOption = (questionId) => {
     const answer = answers[questionId];
     if (!answer) return null;
-    
+
     return questions[questionId].options.find(opt => opt.id === answer);
   };
+
+
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -126,6 +123,45 @@ export default function WiFiTroubleshooter() {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 }
   };
+
+const handleContactSubmit = async () => {
+  if (userContact.name && userContact.email) {
+    console.log("📩 Form Submitted:", userContact);
+
+    const scriptURL =
+      "https://script.google.com/macros/s/AKfycbx7ewhHUsKBDWoepPeIK9qmRfK2zRerrzBa58eKuqSdm6ofLGylzODFSBki-NO3FKc/exec"; 
+
+    // Prepare data for x-www-form-urlencoded
+    const formParams = new URLSearchParams();
+    formParams.append("name", userContact.name);
+    formParams.append("email", userContact.email);
+    formParams.append("phone", userContact.phone || "");
+    formParams.append("provider", getSelectedOption(1)?.label || "");
+    formParams.append("issue", getSelectedOption(2)?.label || "");
+
+    try {
+      const response = await fetch(scriptURL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: formParams.toString(),
+      });
+
+      console.log("📡 Google Script Response:", response);
+
+      if (response.ok) {
+        console.log("✅ Data saved to Google Sheet");
+        setCurrentStep(4); // Move to results
+      } else {
+        console.error("❌ Failed to save data. Status:", response.status);
+      }
+    } catch (error) {
+      console.error("⚠️ Error submitting to Google Sheets:", error);
+    }
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-blue-50 to-pink-50 py-12 lg:py-16">
@@ -203,16 +239,15 @@ export default function WiFiTroubleshooter() {
                       whileHover={{ scale: 1.02, y: -2 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => handleAnswer(currentStep, option.id)}
-                      className={`flex items-center gap-4 p-6 rounded-2xl border-2 transition-all duration-300 text-left ${
-                        isSelected
+                      className={`flex items-center gap-4 p-6 rounded-2xl border-2 transition-all duration-300 text-left ${isSelected
                           ? 'border-blue-400 bg-blue-50 shadow-lg'
                           : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50 shadow-md'
-                      }`}
+                        }`}
                     >
                       <div className={`${isSelected ? 'scale-110' : ''} transition-transform`}>
                         {currentStep === 1 ? (
-                          <img 
-                            src={option.logo} 
+                          <img
+                            src={option.logo}
                             alt={option.label}
                             className="w-8 h-8 object-contain"
                             onError={(e) => {
@@ -228,15 +263,13 @@ export default function WiFiTroubleshooter() {
                         )}
                       </div>
                       <div className="flex-1">
-                        <span className={`font-semibold text-lg ${
-                          isSelected ? 'text-blue-800' : 'text-gray-800'
-                        }`}>
+                        <span className={`font-semibold text-lg ${isSelected ? 'text-blue-800' : 'text-gray-800'
+                          }`}>
                           {option.label}
                         </span>
                       </div>
-                      <ChevronRight className={`w-6 h-6 ${
-                        isSelected ? 'text-blue-600' : 'text-gray-400'
-                      }`} />
+                      <ChevronRight className={`w-6 h-6 ${isSelected ? 'text-blue-600' : 'text-gray-400'
+                        }`} />
                     </motion.button>
                   );
                 })}
@@ -261,7 +294,7 @@ export default function WiFiTroubleshooter() {
           )}
 
           {/* Contact Form */}
-          {currentStep === 3 && ( // Changed from 4 to 3
+          {currentStep === 3 && (
             <motion.div
               key="contact-form"
               variants={questionVariants}
@@ -279,7 +312,14 @@ export default function WiFiTroubleshooter() {
                 </p>
               </div>
 
-              <div className="max-w-2xl mx-auto space-y-6">
+              {/* ✅ Added form here */}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault(); // prevent page reload
+                  handleContactSubmit();
+                }}
+                className="max-w-2xl mx-auto space-y-6"
+              >
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">
                     Full Name *
@@ -288,7 +328,7 @@ export default function WiFiTroubleshooter() {
                     type="text"
                     required
                     value={userContact.name}
-                    onChange={(e) => setUserContact({...userContact, name: e.target.value})}
+                    onChange={(e) => setUserContact({ ...userContact, name: e.target.value })}
                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-400 focus:outline-none transition-colors text-lg"
                     placeholder="Enter your full name"
                   />
@@ -302,7 +342,7 @@ export default function WiFiTroubleshooter() {
                     type="email"
                     required
                     value={userContact.email}
-                    onChange={(e) => setUserContact({...userContact, email: e.target.value})}
+                    onChange={(e) => setUserContact({ ...userContact, email: e.target.value })}
                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-400 focus:outline-none transition-colors text-lg"
                     placeholder="Enter your email address"
                   />
@@ -315,16 +355,14 @@ export default function WiFiTroubleshooter() {
                   <input
                     type="tel"
                     value={userContact.phone}
-                    onChange={(e) => setUserContact({...userContact, phone: e.target.value})}
+                    onChange={(e) => setUserContact({ ...userContact, phone: e.target.value })}
                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-400 focus:outline-none transition-colors text-lg"
                     placeholder="Enter your phone number"
                   />
                 </div>
 
                 <div className="bg-blue-100 border border-blue-300 rounded-2xl p-6">
-                  <p className="text-blue-800 font-semibold mb-2">
-                    📋 Issue Summary:
-                  </p>
+                  <p className="text-blue-800 font-semibold mb-2">📋 Issue Summary:</p>
                   <ul className="text-blue-700 text-sm space-y-1">
                     <li>• Provider: {getSelectedOption(1)?.label || 'Not specified'}</li>
                     <li>• Issue: {getSelectedOption(2)?.label || 'Not specified'}</li>
@@ -342,7 +380,7 @@ export default function WiFiTroubleshooter() {
                   </button>
 
                   <button
-                    onClick={handleContactSubmit}
+                    type="submit"
                     disabled={!userContact.name || !userContact.email}
                     className="flex items-center gap-2 px-8 py-4 bg-blue-500 hover:bg-blue-600 text-white rounded-2xl font-semibold transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                   >
@@ -350,7 +388,7 @@ export default function WiFiTroubleshooter() {
                     <ChevronRight className="w-5 h-5" />
                   </button>
                 </div>
-              </div>
+              </form>
             </motion.div>
           )}
 
@@ -377,8 +415,8 @@ export default function WiFiTroubleshooter() {
                   Our Agent Will Reach You Soon!
                 </h2>
                 <p className="text-xl text-gray-600 mb-6">
-                  Thanks {userContact.name}! We've received your WiFi issue report for 
-                  {answers[1] && ` ${getSelectedOption(1)?.label}`}. Our technical support team 
+                  Thanks {userContact.name}! We've received your WiFi issue report for
+                  {answers[1] && ` ${getSelectedOption(1)?.label}`}. Our technical support team
                   will contact you shortly to resolve your connection problem.
                 </p>
                 <div className="bg-blue-100 border border-blue-300 rounded-2xl p-6 mb-8">
@@ -386,7 +424,7 @@ export default function WiFiTroubleshooter() {
                     ⚡ Priority Support Available
                   </p>
                   <p className="text-blue-700">
-                    Need immediate assistance? Our 24/7 technical support team is ready to 
+                    Need immediate assistance? Our 24/7 technical support team is ready to
                     help you get back online in minutes, not hours.
                   </p>
                 </div>
@@ -399,34 +437,34 @@ export default function WiFiTroubleshooter() {
                 className="grid md:grid-cols-2 gap-6 mb-8"
               >
                 <motion.a
-  href="tel:+18102583601"
-  whileHover={{ scale: 1.05, y: -2 }}
-  whileTap={{ scale: 0.95 }}
-  className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-8 py-6 rounded-2xl font-bold text-xl transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 cursor-pointer"
->
-  <Phone className="w-6 h-6" />
-  <div className="text-left">
-    <div>Call Now - 24/7</div>
-    <div className="text-sm font-normal opacity-90">Instant WiFi Support</div>
-  </div>
-</motion.a>
+                  href="tel:+18102583601"
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-8 py-6 rounded-2xl font-bold text-xl transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 cursor-pointer"
+                >
+                  <Phone className="w-6 h-6" />
+                  <div className="text-left">
+                    <div>Call Now - 24/7</div>
+                    <div className="text-sm font-normal opacity-90">Instant WiFi Support</div>
+                  </div>
+                </motion.a>
 
 
-               
-                
+
+
                 <motion.button
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                   className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-6 rounded-2xl font-bold text-xl transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-3"
                 >
-                     <a href="https://devicedetect.vercel.app/" target='_blank' className='flex items-center justify-center gap-3'>
+                  <a href="https://devicedetect.vercel.app/" target='_blank' className='flex items-center justify-center gap-3'>
 
-                  <Search className="w-6 h-6" />
-                  <div className="text-left">
-                    <div>Scan Now - 24/7</div>
-                    <div className="text-sm font-normal opacity-90">Diagnose Your Network</div>
-                  </div>
-                    </a>
+                    <Search className="w-6 h-6" />
+                    <div className="text-left">
+                      <div>Scan Now - 24/7</div>
+                      <div className="text-sm font-normal opacity-90">Diagnose Your Network</div>
+                    </div>
+                  </a>
                 </motion.button>
 
               </motion.div>
